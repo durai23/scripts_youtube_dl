@@ -30,6 +30,15 @@ TODO
 					then supply this to youtube-dl to downlaod
 						scrapbox can crawl fast over date rnage
 						same thign  in youtube-dl is serial
+		youtube-dl
+			trying to parse dict and compute view/day
+				done
+					validated using channel with 10 vids
+						https://www.youtube.com/channel/UCPsOEOqYQGRdejMsC3OVjkQ/videos
+							took 14 seconds
+								calculates accurately
+									but does it differ from popularitu
+
 
 		TODO
 			how to get video meta data
@@ -38,6 +47,14 @@ TODO
 TODO
 	5meta_data.py is the standard for argparse
 		copy paste into other sccirpsts
+
+
+Get 5% OFF Monthly Discount Code "5OFFSTORM"
+HOME
+ROTATING PROXIES 
+DEDICATED PROXIES 
+COMPARE PACKAGES
+LOGIN
 
 
 

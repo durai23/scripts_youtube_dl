@@ -3,7 +3,7 @@ import youtube_dl
 from youtube_dl.utils import DateRange
 import argparse
 import pandas as pd
-
+from datetime import datetime
 # Instantiate the parser
 parser = argparse.ArgumentParser(description='supply url compulsroy')
 # url to process
@@ -75,6 +75,20 @@ print(args.thumb)
 print("bool metadata:")
 print(args.meta)
 
+
+def print_title_vpd(d):
+	print "Title -"+d['title']
+	print "Views per day -"+str(views_per_day(d['view_count'],d['upload_date']))
+
+# compute date tiem metric
+def views_per_day(vws,udt):
+	ytd_date_format='%Y%m%d'
+	udt=datetime.strptime(udt,ytd_date_format)
+	days_since_upload=(datetime.today()-udt).days
+	return vws/days_since_upload
+
+
+
 ydl_opts = {
     #'daterange' : DateRange('20150730','20150802'),
     #'daterange' : DateRange('20150730','20150802'),
@@ -87,7 +101,28 @@ with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     info_dict = ydl.extract_info(args.url, download=False) 
     #ydl.download(['MqpVnYrNnf0'])
 
+channel_flag=True
+
 #view_rate=
+try:
+	print len(info_dict['entries'])
+except KeyError:
+	#print "it is SINGLE video"
+	channel_flag=False
 
-print info_dict 
+#compute views/day metric
 
+if channel_flag:
+	print "it is CHANNEL"
+	# cycle through entries
+	for i in info_dict['entries']:
+		print_title_vpd(i)
+else:
+	print_title_vpd(info_dict)
+
+# if not channel_flag:
+# 	print "it is SINGLE"
+
+
+
+	
