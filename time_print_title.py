@@ -6,8 +6,8 @@ import pandas as pd
 
 # Instantiate the parser
 parser = argparse.ArgumentParser(description='supply url compulsroy')
+
 # url to process
-# n0amE96UjWk
 parser.add_argument('--url', type=str, required=True,
                     help='A required url argument')
 # simulate 
@@ -23,9 +23,7 @@ parser.add_argument('--oloc', type=str, default="F:\yt2018\%%(uploader_id)s_%%(u
                     help='output location')
 # date range
 ################not working now-4years is not interpted righ
-parser.add_argument('--tfrom', type=str, default="20060101",
-                    help='date range in ytdl format')
-parser.add_argument('--ttill', type=str, default="20190101",
+parser.add_argument('--trange', type=str, default="now-4years",
                     help='date range in ytdl format')
 # thumbnail
 parser.add_argument('--thumb', type=bool, default=False,
@@ -40,8 +38,7 @@ parser.add_argument('--fmat', type=str, default="bestvideo[ext=mp4][height=1080]
 parser.add_argument('--i', type=bool, default=True,
                     help='bool ignore errors')
 # do not overwrite
-parser.add_argument('--w', type=bool, default=True,
-                    help='bool do not overwrite')
+parser.add_argument('--w', type=bool, default=True, help='bool do not overwrite')
 # quiet
 parser.add_argument('--q', type=bool, default=False, help='bool do not overwrite')
 
@@ -50,49 +47,38 @@ parser.add_argument('--q', type=bool, default=False, help='bool do not overwrite
 #parser.add_argument('--switch', action='store_true', help='A boolean switch')
 
 args = parser.parse_args()
-print args.__dict__
+# print args.__dict__
 
-print("Video url:")
-print(args.url)
-print("simulate:")
-print(args.sim)
-print("print title:")
-print(args.ttl)
-print("views filter:")
-print(args.views)
-print("output path:")
-print(args.oloc)
-print("upload date range:")
-print(DateRange(args.tfrom))
-print(DateRange(args.ttill))
-print("bool thumbnail:")
-print(args.thumb)
-print("bool metadata:")
-print(args.meta)
-print("file name format:")
-print(args.fmat)
-print("ignore errors:")
-print(args.i)
-print("don't overwrite:")
-print(args.w)
-print("quiet:")
-print(args.q)
+# print("Video url:")
+# print(args.url)
+# print("simulate:")
+# print(args.sim)
+# print("print title:")
+# print(args.ttl)
+# print("views filter:")
+# print(args.views)
+# print("output path:")
+# print(args.oloc)
+# print("upload date range:")
+# print(DateRange(args.trange))
+# print("bool thumbnail:")
+# print(args.thumb)
+# print("bool metadata:")
+# print(args.meta)
+# print("file name format:")
+# print(args.fmat)
+# print("ignore errors:")
+# print(args.i)
+# print("don't overwrite:")
+# print(args.w)
+# print("quiet:")
+# print(args.q)
 
 #count number of hits from channle given filters
 ydl_opts = {
     'simulate': args.sim,
     'forcetitle':args.ttl,
-    'min_views': args.views,
-    'outtmpl':args.oloc,
-    'daterange' : DateRange(args.tfrom,args.ttill),
-    'writethumbnail':args.thumb,
-    'writeinfojson':args.meta,
-    'format': args.fmat,
-    'ignoreerrors':args.i,
-    'nooverwrites':args.w,
-    'quiet':args.q
-    #'logger': MyLogger(),
-    #'progress_hooks': [my_hook],
+    'ignoreerrors':args.i
 }
 
 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
