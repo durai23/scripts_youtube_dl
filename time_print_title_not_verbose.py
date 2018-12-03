@@ -79,7 +79,7 @@ ydl_opts = {
     'simulate': args.sim,
     'forcetitle':args.ttl,
     'ignoreerrors':args.i,
-    'verbose':True
+    'verbose':False
 }
 
 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
