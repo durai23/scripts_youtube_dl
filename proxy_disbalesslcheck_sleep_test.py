@@ -18,6 +18,8 @@ bestfrmat2="bestvideo[ext=mp4][height=1080][height>=720],bestaudio[ext=m4a][abr<
 defrmat2="best[ext=mp4][height<=1080][height>=720]"
 defrmat="best[ext=mp4][height<=1080][height>=720]"
 wrstfrmat="worstvideo[ext=mp4][height=1080][height>=720],worstaudio[ext=m4a][abr<192]"
+bestvid="bestvideo[height<=1080][ext=mp4]"
+bestaud="bestaudio[abr<160]"
 
 parser = argparse.ArgumentParser(description='supply url compulsroy')
 
@@ -142,3 +144,29 @@ with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 #print(video)
 #video_url = video['url']
 #print(video_url)
+
+
+
+#count number of hits from channle given filters
+ydl_opts = {
+    # 'simulate': args.sim,
+    'forcetitle':args.ttl,
+    #'min_views': args.views,
+    'outtmpl':args.oloc,
+    #'daterange' : DateRange(args.tfrom,args.ttill),
+    'writethumbnail':True,
+    'writeinfojson':True,
+    'format': args.fmat,
+    'ignoreerrors':args.i,
+    'nooverwrites':args.w,
+    'verbose':True,
+    #'quiet':args.q,
+    # 'nocheckcertificate':True,
+    # 'proxy':"5.79.73.131:13080",
+    'proxy':"195.154.252.58:15003",
+    'sleep_interval':10,
+    # 'proxy':"",
+    #'logger': MyLogger(),
+    #'progress_hooks': [my_hook],
+    'noplaylist':False,
+}
