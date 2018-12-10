@@ -27,7 +27,7 @@ parser.add_argument('--fmat', type=str, default="bestvideo[ext=mp4][height=1080]
 # default="Y:\yt2018\%%(uploader_id)s_%%(uploader)s\%%(id)s_%%(title)s_%%(upload_date)s_%%(height)s_%%(abr)s_%%(format_id)s.%%(ext)s"
 # linux
 # default="/home/durai/shared_yt2018/%(uploader_id)s_%(uploader)s/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
-parser.add_argument('--oloc', type=str, default="/home/durai/shared_yt2018/%(uploader_id)s_%(uploader)s/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s",
+parser.add_argument('--oloc', type=str, default="/home/durai/shared_yt2018/%(channel_id)s_%(playlist_id)s_%(uploader_id)s_%(uploader)s/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s",
                     help='output location')
 # FLAGS
 # simulate 

@@ -6,6 +6,15 @@ import pandas as pd
 import os
 from datetime import datetime
 
+bestfmrt="best"
+oldfrmt="bestvideo[ext=mp4][height=1080][height>=720],bestaudio[ext=m4a][abr<192]"
+cygpath="/cygdrive/y/yt2018/%(playlist_id)s_%(playlist_title)s/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
+# need to chagne below paths to remove channel id and uplaoder id
+winpath2="Y:\yt2018\%%(playlist_id)s_%%(playlist_title)s\%%(id)s_%%(title)s_%%(upload_date)s_%%(height)s_%%(abr)s_%%(format_id)s.%%(ext)s"
+winpath="Y:\yt2018\%(playlist_id)s_%(playlist_title)s\%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
+winpath_csv="Y:\yt2018\%(playlist_id)s_%(playlist_title)s\%(playlist_id)s_%(playlist_title)s.csv"
+vmpath="/home/durai/shared_yt2018/%(playlist_id)s_%(playlist_title)s/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
+
 # Instantiate the parser
 parser = argparse.ArgumentParser(description='supply url compulsroy')
 # url to process
@@ -22,11 +31,9 @@ parser.add_argument('--tfrom', type=str, default="20060101",
 parser.add_argument('--ttill', type=str, default="20190101",
                     help='date range in ytdl format')
 # format
-parser.add_argument('--fmat', type=str, default="bestvideo[ext=mp4][height=1080][height>=720],bestaudio[ext=m4a][abr<192]",
-                    help='format in ytdl format')
+parser.add_argument('--fmat', type=str, default="best", help='format in ytdl format')
 # output location
-parser.add_argument('--oloc', type=str, default="F:\yt2018\%%(uploader_id)s_%%(uploader)s\%%(id)s_%%(title)s_%%(upload_date)s_%%(height)s_%%(abr)s_%%(format_id)s.%%(ext)s",
-                    help='output location')
+parser.add_argument('--oloc', type=str, default=winpath, help='output location')
 # FLAGS
 # simulate 
 parser.add_argument('--sim', type=bool, default=True,
@@ -96,19 +103,19 @@ print(args.v)
 
 
 ydl_opts = {
-    'simulate': args.sim,
-    # 'forcetitle':args.ttl,
+    # 'simulate': args.sim,
+    'forcetitle':args.ttl,
     # 'min_views': args.views,
-    # 'outtmpl':args.oloc,
+    'outtmpl':args.oloc,
     # 'daterange' : DateRange(args.tfrom,args.ttill),
-    # 'writethumbnail':args.thumb,
-    # 'writeinfojson':args.meta,
-    # 'format': args.fmat,
-    # 'ignoreerrors':args.i,
-    # 'nooverwrites':args.w,
+    'writethumbnail':True,
+    'writeinfojson':True,
+    'format': args.fmat,
+    'ignoreerrors':args.i,
+    'nooverwrites':args.w,
     'verbose':args.v,
     # 'quiet':args.q,
-    #'proxy':args.prx
+    'proxy':"195.154.222.26:15003",
     #'logger': MyLogger(),
     #'progress_hooks': [my_hook],
 }
@@ -126,7 +133,10 @@ def views_per_day(vws,udt):
 	return vws/days_since_upload
 
 def add_to_df(d,v):
-	cols=['upload_date','extractor','height','playlist_index','view_count','playlist','title','dislike_count','width','uploader_url','acodec','display_id','format','uploader','uploader_id','categories','extractor_key','vcodec','channel_id','webpage_url','abr','fps','channel_url','thumbnail','webpage_url_basename','tags','format_id','ext']
+	old_cols=['upload_date','extractor','height','playlist_index','view_count','playlist','title','dislike_count','width','uploader_url','acodec','display_id','format','uploader','uploader_id','categories','extractor_key','vcodec','channel_id','webpage_url','abr','fps','channel_url','thumbnail','webpage_url_basename','tags','format_id','ext']
+	# removed fps and added id
+	cols=['upload_date','extractor','height','playlist_index','view_count','playlist','title','dislike_count','width','uploader_url','acodec','display_id','format','uploader','uploader_id','categories','extractor_key','vcodec','channel_id','webpage_url','abr','channel_url','thumbnail','webpage_url_basename','tags','format_id','ext','id']
+	print(d.keys())
 	rw=[]
 	rw_ind=0
 	# construct row
@@ -152,14 +162,14 @@ vpd_threshold=args.vpd
 # }
 
 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-    info_dict = ydl.extract_info(args.url, download=False) 
+    info_dict = ydl.extract_info(args.url, download=True) 
     #ydl.download(['MqpVnYrNnf0'])
 
 channel_flag=True
 
 #view_rate=
 try:
-	print len(info_dict['entries'])
+	print "it is channel or playlist with "+str(len(info_dict['entries']))+" videos"
 except KeyError:
 	#print "it is SINGLE video"
 	channel_flag=False
@@ -167,8 +177,10 @@ except KeyError:
 #compute views/day metric
 if channel_flag:
 	print "it is CHANNEL"
-	#out_csv=os.path.join("C:",os.sep,"cygwin64","home","synapse","channel_selection_by_vpd.csv")
-	out_csv="/home/durai/shared_scripts_youtube_dl/channel_selection_by_vpd.csv"
+	# out_csv=os.path.join("C:",os.sep,"cygwin64","home","synapse","channel_selection_by_vpd.csv")
+	out_csv=os.path.join("C:",os.sep,"cygwin64","home","synapse","playist_test.csv")
+	# out_csv=winpath_csv
+	#out_csv="/home/durai/shared_scripts_youtube_dl/channel_selection_by_vpd.csv"
 	# cycle through entries
 	cols=['upload_date','extractor','height','playlist_index','view_count','playlist','title','dislike_count','width','uploader_url','acodec','display_id','format','uploader','uploader_id','categories','extractor_key','vcodec','channel_id','webpage_url','abr','fps','channel_url','thumbnail','webpage_url_basename','tags','format_id','ext']
 	df=pd.DataFrame(columns=cols)

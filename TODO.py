@@ -2,6 +2,72 @@
 SOLVED
 views_channel_filter is teh defualt for argparse block
 
+12/7
+
+YTD PIPELINE
+
+diigo csv
+	save csv as it has tags
+	reduce to list of youtube video IDs
+
+yt playlists
+	reduce to list of youtube playlsit IDs
+	can run for loop over it
+		but what if tehre is an error
+			possible that ytd will continue 
+				CHECK if it skips overwriting***************
+
+dl videos and make playlists simultanesiouly
+	ie donwload only if not present 
+
+
+ONE DIRECTORY FOR ALL VIDEOS?
+	how to search for file fast?
+		naming convention
+			from playlist or from video_id
+
+
+
+
+
+DATA PATHS
+	printing text files of folders
+		manually supply folder location and it outputs text files
+			approximately 20 fodlers
+				why nto automatic
+					because repeat copies in various disks
+						too much printing
+							so just manually supply and put txt files in testrep for printing at work
+								SOLVED
+GOOGLE SHEETS
+	put caps text at top of every sheet
+		manually download them and put them in testrep
+
+CYGWIN TEST results
+	put url in quotes otehrwise it raises issue with ampersand
+	2216 aniston 22 vids - stopwatch plus 5 mins
+	what will playlist id be if you dl single video - NA? YES
+		FAIL
+			did not donwload mp4 set (3) for 4 out of 22 videos
+				test in windows
+
+FAIL from format selection probably
+	checked failed vids all have 1080 missing
+
+
+
+btw I keep getting this message -
+"WARNING: Parameter outtmpl is bytes, but should be a unicode string. Put  from _
+_future__ import unicode_literals  at the top of your code file or consider swit
+ching to Python 3.x."
+despite adding the import in the python script -
+"from __future__ import unicode_literals"
+
+ISSUES
+	ytd doesnt work with http proxies
+		try us or eu based proxiesw
+	ytd metadata pack has changed - complainign about fps keyerror - see line 136 in 5meta_data.py
+
 ***************************************************************************************************************************************
 12/2
 
