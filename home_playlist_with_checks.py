@@ -6,6 +6,7 @@ import youtube_dl
 import argparse
 import pandas as pd
 import os
+import re
 import glob
 # from datetime import datetime
 # Instantiate the parser
@@ -184,22 +185,50 @@ ydl_opts = {
     #'noplaylist':False,
 }
 
-def check_dl_files(plid):
+def check_dl_files(idd,plid):
+    updt=r'\d{8}'
+    viddrgx=idd+r'.*'+plid+r'.*'+updt+r'_\d{3,4}_NA_.*[^(g|n)]$'
+    auddrgx=idd+r'.*'+plid+r'.*'+updt+r'_NA_\d{2,3}_'
+    thumbbrgx=idd+r'.*'+plid+r'.*'+updt+r'_\d{3,4}_NA_.*jpg$'
+    metaargx=idd+r'.*'+plid+r'.*'+updt+r'_\d{3,4}_NA_.*json$'
+    dl_folder=os.path.join("M:",os.sep,"yt2018")
+    fpassno=0
+    for k in viddrgx,auddrgx,thumbbrgx,metaargx:
+        res = [f for f in os.listdir(dl_folder) if re.search(k, f)]
+        if 0<len(res)<=1:
+            fpassno+=1
+    if fpassno==4:
+        return True
+    else:
+        return False
 
 
-
-def add_to_df(d,cl):
+def add_to_df(d,cl,cll):
         rw=[]
+        try:
+            print "addding row for video "+str(d['id'])
+        except:
+            print "bad dict - will enter None" #or NaN is better
         #rw_ind=0
         # construct row
         #if int(d['view_count'])>v:
-        for i in cl:
+        # cll=list(cl)
+        # cl.remove('allfourdled')
+
+        for i in cll:
             try:
                 rw.append(d[i])
             except:
                 rw.append('None')
+        try:
+            if check_dl_files(d['id'],d['playlist_id']):
+                rw.append('T')
+            else:
+                rw.append('F')
+        except:
+            rw.append('F')
 
-        df1=pd.DataFrame([rw],columns=cols)
+        df1=pd.DataFrame([rw],columns=cl)
         # print "for video "+str(d['title'])
         return df1
 
@@ -227,18 +256,19 @@ if channel_flag:
         except:
             print "$$$$$$$$$$$$$$$$ FAIL  trying next entry" #"+info_dict['entries'][j]['id']+"
     out_csv=os.path.join("M:",os.sep,"yt2018",str(pl_id)+".csv")
-    check_dl_files(pl_id)
+    # check_dl_files(pl_id)
     # "/cygdrive/m/yt2018/%(playlist_id)s_%(playlist_title)s.csv"
     #out_csv=os.path.join("C:",os.sep,"cygwin64","home","synapse","playist_test.csv")
     # out_csv=winpath_csv
     #out_csv="/home/durai/shared_scripts_youtube_dl/channel_selection_by_vpd.csv"
     # cycle through entries
-    cols=['upload_date', 'extractor', 'height', 'playlist_index', 'view_count', 'playlist', 'title', 'dislike_count', 'playlist_id', 'uploader_url', 'display_id', 'format', 'start_time', 'uploader', 'uploader_id', 'categories', 'artist', 'extractor_key', 'vcodec', 'channel_id', 'end_time', 'webpage_url', 'playlist_uploader_id', 'acodec', 'n_entries', 'age_limit', 'creator', 'like_count', 'duration', 'id', 'average_rating', 'fps', 'channel_url', 'thumbnail', 'webpage_url_basename', 'description', 'tags', 'track', 'playlist_uploader', 'format_id','playlist_title', 'license', 'ext', 'width']
+    cols=['upload_date', 'extractor', 'height', 'playlist_index', 'view_count', 'playlist', 'title', 'dislike_count', 'playlist_id', 'uploader_url', 'display_id', 'format', 'start_time', 'uploader', 'uploader_id', 'categories', 'artist', 'extractor_key', 'vcodec', 'channel_id', 'end_time', 'webpage_url', 'playlist_uploader_id', 'acodec', 'n_entries', 'age_limit', 'creator', 'like_count', 'duration', 'id', 'average_rating', 'fps', 'channel_url', 'thumbnail', 'webpage_url_basename', 'description', 'tags', 'track', 'playlist_uploader', 'format_id','playlist_title', 'license', 'ext', 'width', 'allfourdled']
+    cols_sans_allfourdled=['upload_date', 'extractor', 'height', 'playlist_index', 'view_count', 'playlist', 'title', 'dislike_count', 'playlist_id', 'uploader_url', 'display_id', 'format', 'start_time', 'uploader', 'uploader_id', 'categories', 'artist', 'extractor_key', 'vcodec', 'channel_id', 'end_time', 'webpage_url', 'playlist_uploader_id', 'acodec', 'n_entries', 'age_limit', 'creator', 'like_count', 'duration', 'id', 'average_rating', 'fps', 'channel_url', 'thumbnail', 'webpage_url_basename', 'description', 'tags', 'track', 'playlist_uploader', 'format_id','playlist_title', 'license', 'ext', 'width']
 #        cols=['upload_date','extractor','height','playlist_index','view_count','playlist','title','dislike_count','width','uploader_url','acodec','display_id','format','uploader','uploader_id','categories','extractor_key','vcodec','channel_id','webpage_url','channel_url','thumbnail','webpage_url_basename','tags','format_id','ext','id']
     df=pd.DataFrame(columns=cols)
     for i in info_dict['entries']:
 #               if print_title_vpd(i)>vpn_threshold:
-            df=df.append(add_to_df(i,cols),ignore_index=True)
+            df=df.append(add_to_df(i,cols,cols_sans_allfourdled),ignore_index=True)
     df.to_csv(out_csv, encoding='utf-8')
 else:
     print "not channel EXITING"

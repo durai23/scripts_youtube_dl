@@ -2,6 +2,24 @@
 SOLVED
 views_channel_filter is teh defualt for argparse block
 
+12/13
+ok recently this was done - most recent first
+	confirmed does not repeate download if run again on same playlist - excpet for m4a audio
+	checking of 4 files and noting in final csv  whether video was successful
+	csv construction was finalized - removing erring keys
+	NOT possible on cygwin unless pandas fixed
+
+BUT now error handling
+	connection drops or command aborts
+		repeat - wont download old ones
+			OK
+	same video in another playlist 
+		NOT OK
+			change naming template to contain only ID not PLAYLIST_ID
+				NOW OK
+					have to make sure check 4 files nad noting in final csv works			
+
+
 12/7
 
 YTD PIPELINE
@@ -158,7 +176,6 @@ TODO
 		copy paste into other sccirpsts
 
 
-Get 5% OFF Monthly Discount Code "5OFFSTORM"
 HOME
 ROTATING PROXIES 
 DEDICATED PROXIES 
