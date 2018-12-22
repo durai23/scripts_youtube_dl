@@ -17,7 +17,9 @@ cygpath="/cygdrive/y/yt2018/%(playlist_id)s_%(playlist_title)s/%(id)s_%(title)s_
 # need to chagne below paths to remove channel id and uplaoder id
 winpath2="Y:\yt2018\%%(playlist_id)s_%%(playlist_title)s\%%(id)s_%%(title)s_%%(upload_date)s_%%(height)s_%%(abr)s_%%(format_id)s.%%(ext)s"
 winpath="M:\yt2018\%(id)s_%(title)s_%(playlist_id)s_%(playlist_title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
-vmpath="/home/durai/shared_yt2018/%(playlist_id)s_%(playlist_title)s/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
+vmpath_vid="/home/arasan/imenb/yt2018/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
+vmpath_aud="/home/arasan/imenb/yt2018/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s_ytd2018audioeggplantcapsicumvelacheryundhiu.%(ext)s"
+
 
 
 origfrmat="bestvideo[ext=mp4][height=1080][height>=720],bestaudio[ext=m4a][abr<192]"
@@ -57,7 +59,7 @@ parser.add_argument('--fmat', type=str, default=bestfrmat, help='format in ytdl 
 # default="Y:\yt2018\%%(uploader_id)s_%%(uploader)s\%%(id)s_%%(title)s_%%(upload_date)s_%%(height)s_%%(abr)s_%%(format_id)s.%%(ext)s"
 # linux
 # default="/home/durai/shared_yt2018/%(uploader_id)s_%(uploader)s/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
-parser.add_argument('--oloc', type=str, default=vmpath, help='output location')
+parser.add_argument('--oloc', type=str, default=vmpath_vid, help='output location')
 # "/home/durai/shared_yt2018/%(playlist_id)s/%(id)s_%(title)s_%(upload_date)s_%(height)s_%(abr)s_%(format_id)s.%(ext)s"
 # FLAGS
 # simulate 
@@ -123,7 +125,7 @@ ydl_opts = {
     # 'simulate': args.sim,
     'forcetitle':True,
     #'min_views': args.views,
-    'outtmpl':winpath,
+    'outtmpl':vmpath_aud,
     #'daterange' : DateRange(args.tfrom,args.ttill),
     # 'writethumbnail':False,
     # 'writeinfojson':False,
@@ -166,7 +168,7 @@ ydl_opts = {
     # 'simulate': args.sim,
     'forcetitle':True,
     #'min_views': args.views,
-    'outtmpl':winpath,
+    'outtmpl':vmpath_vid,
     #'daterange' : DateRange(args.tfrom,args.ttill),
     'writethumbnail':True,
     'writeinfojson':True,
@@ -187,16 +189,27 @@ ydl_opts = {
 
 def check_dl_files(idd,plid):
     updt=r'\d{8}'
-    viddrgx=idd+r'.*'+plid+r'.*'+updt+r'_\d{3,4}_NA_.*[^(g|n)]$'
-    auddrgx=idd+r'.*'+plid+r'.*'+updt+r'_NA_\d{2,3}_'
-    thumbbrgx=idd+r'.*'+plid+r'.*'+updt+r'_\d{3,4}_NA_.*jpg$'
-    metaargx=idd+r'.*'+plid+r'.*'+updt+r'_\d{3,4}_NA_.*json$'
-    dl_folder=os.path.join("M:",os.sep,"yt2018")
+
+    viddrgx=idd+r'.*'+updt+r'_\d{3,4}_NA_.*[^(g|n)]$'
+    # auddrgx=idd+r'.*'+plid+r'.*'+updt+r'_NA_\d{2,3}_'
+    auddrgx=idd+r'.*'+'_ytd2018audioeggplantcapsicumvelacheryundhiu'
+    thumbbrgx=idd+r'.*'+updt+r'_\d{3,4}_NA_.*jpg$'
+    metaargx=idd+r'.*'+updt+r'_\d{3,4}_NA_.*json$'
+    
+    # viddrgx=idd+r'.*'+updt+r'_\d{3,4}_NA_.*[^(g|n)]$'
+    # # auddrgx=idd+r'.*'+plid+r'.*'+updt+r'_NA_\d{2,3}_'
+    # auddrgx=idd+r'.*'+'_ytd2018audioeggplantcapsicumvelacheryundhiu'
+    # thumbbrgx=idd+r'.*'+updt+r'_\d{3,4}_NA_.*jpg$'
+    # metaargx=idd+r'.*'+updt+r'_\d{3,4}_NA_.*json$'
+    # # dl_folder=os.path.join("M:",os.sep,"yt2018")
+    dl_folder='/home/arasan/imenb/yt2018'
     fpassno=0
     for k in viddrgx,auddrgx,thumbbrgx,metaargx:
         res = [f for f in os.listdir(dl_folder) if re.search(k, f)]
         if 0<len(res)<=1:
             fpassno+=1
+        else:
+            print "FAIL for "+str(k)
     if fpassno==4:
         return True
     else:
@@ -255,7 +268,8 @@ if channel_flag:
             break
         except:
             print "$$$$$$$$$$$$$$$$ FAIL  trying next entry" #"+info_dict['entries'][j]['id']+"
-    out_csv=os.path.join("M:",os.sep,"yt2018",str(pl_id)+".csv")
+    # out_csv=os.path.join("M:",os.sep,"yt2018",str(pl_id)+".csv")
+    out_csv='/home/arasan/imenb/yt2018/'+str(pl_id)+'.csv'
     # check_dl_files(pl_id)
     # "/cygdrive/m/yt2018/%(playlist_id)s_%(playlist_title)s.csv"
     #out_csv=os.path.join("C:",os.sep,"cygwin64","home","synapse","playist_test.csv")
